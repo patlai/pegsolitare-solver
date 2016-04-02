@@ -13,6 +13,7 @@ public class work {
 
         for(int i = 0; i < n.getChildren().size(); i++){
            System.out.println( n.getChildren().get(i).getContent());
+            System.out.println(n.getChildren().get(0).getParent().getContent());
         }
 
     }

@@ -56,39 +56,39 @@ public class Main {
     };
     public static void main(String[] args){
         boolean[] c = {
-                false,
-                false,
-                false,
-                false,
                 true,
-                false,
-                false,
-                false,
                 true,
-                false,
-                false,
-                false,
-                false,
-                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
                 true,
                 true,
                 true,
                 true,
                 false,
-                false,
-                false,
                 true,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
         };
         HiRiQ x = new HiRiQ((byte) 3);
         HiRiQ tt = new HiRiQ((byte) 0);
@@ -169,7 +169,7 @@ public class Main {
 
     public static boolean findLoop(Node<boolean[]> b, Node<boolean[]> parent){
         try{
-            if(Arrays.equals(parent.getContent(),b.getContent())) {
+            if(Arrays.equals(b.getContent(),parent.getContent())) {
                 return true;
             } else{
                 return findLoop(b, parent.getParent());
@@ -179,7 +179,7 @@ public class Main {
         }
     }
 
-    public static ArrayList<String> solve(ArrayList<Node<boolean[]>>b, int depth){
+    public static void solve(ArrayList<Node<boolean[]>>b, int depth){
         ArrayList<String> s = new ArrayList<>();
         boolean containsSolved = false;
         int i;
@@ -204,19 +204,27 @@ public class Main {
                     boolean[] b1 = new boolean[33];
                     System.arraycopy(b.get(k).getContent(), 0, b1, 0, b.get(k).getContent().length);
                     bSub(b1, triplets[j]);
+
                     if (!Arrays.equals(b1, b.get(k).getContent())) {
                         b.get(k).addChild(b1);
                         HiRiQ q = new HiRiQ((byte)0);
                         q.store(b1);
                         System.out.println("depth: " + depth + "  child: " + k);
                         q.print();
+                        if(depth == 26 && unsolvable(b1)){
+                            System.exit(0);
+                        }
+//                        if(findLoop(b.get(k).getChildren().get(0),b.get(k))){
+//                            b.get(k).getChildren().remove(0);
+//                            System.out.println("found loop");
+//                        }
                     }
                 }
                   solve(b.get(k).getChildren(),depth+1);
             }
 
         }
-        return s;
+        return;
     }
 
     public static ArrayList<String> getStrings(Node<boolean[]> b, ArrayList<String> s){
@@ -243,8 +251,34 @@ public class Main {
     }
 
 
+    public static boolean unsolvable(boolean[] b){
+        boolean x = true;
+        for(int i = 0; i < triplets.length; i++){
+            if(((b[triplets[i][0]] ^ b[triplets[i][2]] ) && b[triplets[i][1]])){
+                x = false;
+               break;
+            }
+
+        }
+        return x;
+    }
+
     //bSub = [@][@][ ] -> [ ][ ][@]
     //wSub = [ ][ ][@] -> [@][@][ ]
+
+    public static boolean[] wSub(boolean[] b, int[] x){
+        if((b[x[0]] && b[x[2]]) || (!b[x[0]] && !b[x[2]])){
+            return b;
+        } else if((b[x[0]] || b[x[2]]) && !b[x[1]]) {
+            //System.out.println("{"+x[0]+" W "+x[2]+"}");
+            b[x[0]] = !b[x[0]];
+            b[x[1]] = !b[x[1]];
+            b[x[2]] = !b[x[2]];
+            return b;
+        } else {
+            return b;
+        }
+    }
 
     public static boolean[] bSub(boolean[] b, int[] x){
 
