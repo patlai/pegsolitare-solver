@@ -1,10 +1,7 @@
 //[@] = black = false
 //[ ] = white = true
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import javax.swing.*;
 
 public class Main {
@@ -102,17 +99,29 @@ public class Main {
         boolean[] b = new boolean[33];
         ArrayList<String> s = new ArrayList<>();
         Node<boolean[]> cc = new Node(c);
-        makeBoolean(cc,s, 0);
+        Node<boolean[]> bb = new Node(b);
+        //System.out.println(findLoop(cc,bb));
+       // makeBoolean(cc,s, 0);
+        Node<boolean[]> q = new Node<boolean[]>(c);
+        ArrayList<Node<boolean[]>> qq = new ArrayList<>();
+        qq.add(q);
+        solve(qq,0);
+        HiRiQ one = new HiRiQ((byte) 0);
+        HiRiQ two = new HiRiQ((byte) 0);
+        HiRiQ three = new HiRiQ((byte) 0);
+        HiRiQ four = new HiRiQ((byte) 0);
+        HiRiQ five = new HiRiQ((byte) 0);
+        HiRiQ six = new HiRiQ((byte) 0);
+        Node<HiRiQ> ONE = new Node<>(one);
     }
 
 
     public static ArrayList<Node<boolean[]>> makeBoolean (Node<boolean[]> b , ArrayList<String> s, int index){
-       // ArrayList<boolean[]> qq  = new ArrayList<>();
+        // ArrayList<boolean[]> qq  = new ArrayList<>();
         int k = 0;
         HiRiQ tmp2 = new HiRiQ((byte)0);
         tmp2.store(b.getContent());
         if(tmp2.IsSolved()){
-            return b.getChildren();
         } else {
             outerloop:
             for (k = 0; k < 38; k++) {
@@ -135,17 +144,79 @@ public class Main {
                         System.out.println("index: " + index);
                         getStrings(b.getChildren().get(0), s);
                         //return makeBoolean(b.getChildren().get(0), s, 0);
-                        return b.getChildren();
+                        //throw(new NullPointerException());
+                        while(true) {
+                            return b.getChildren();
+                        }
                     } else {
                         for (int i = 0; i < b.getChildren().size(); i++) {
-                            makeBoolean(b.getChildren().get(i), s, i);
+                            if(findLoop(b, b.getParent())){
+                                System.out.println("du ma");
+                                return b.getChildren();
+                            } else {
+                                makeBoolean(b.getChildren().get(i), s, i);
+                            }
                         }
                     }
                 }
             }
-            return b.getChildren();
-        }
 
+        }
+        return b.getChildren();
+    }
+
+
+
+    public static boolean findLoop(Node<boolean[]> b, Node<boolean[]> parent){
+        try{
+            if(Arrays.equals(parent.getContent(),b.getContent())) {
+                return true;
+            } else{
+                return findLoop(b, parent.getParent());
+            }
+        }catch (NullPointerException e){
+            return false;
+        }
+    }
+
+    public static ArrayList<String> solve(ArrayList<Node<boolean[]>>b, int depth){
+        ArrayList<String> s = new ArrayList<>();
+        boolean containsSolved = false;
+        int i;
+        for(i = 0; i<b.size(); i++){
+            HiRiQ tmp = new HiRiQ((byte) 0);
+            tmp.store(b.get(i).getContent());
+            if(tmp.IsSolved()){
+                containsSolved = true;
+                tmp.print();
+                break;
+            }
+        }
+        if(containsSolved){
+            s = getStrings(b.get(i),s);
+            for(int f = 0; f< s.size(); f++){
+                System.out.println(s.get(f));
+            }
+            System.exit(0);
+        } else {
+            for(int k = 0; k<b.size(); k++) {
+                for (int j = 0; j < 38; j++) {
+                    boolean[] b1 = new boolean[33];
+                    System.arraycopy(b.get(k).getContent(), 0, b1, 0, b.get(k).getContent().length);
+                    bSub(b1, triplets[j]);
+                    if (!Arrays.equals(b1, b.get(k).getContent())) {
+                        b.get(k).addChild(b1);
+                        HiRiQ q = new HiRiQ((byte)0);
+                        q.store(b1);
+                        System.out.println("depth: " + depth + "  child: " + k);
+                        q.print();
+                    }
+                }
+                  solve(b.get(k).getChildren(),depth+1);
+            }
+
+        }
+        return s;
     }
 
     public static ArrayList<String> getStrings(Node<boolean[]> b, ArrayList<String> s){
@@ -156,13 +227,14 @@ public class Main {
             }
         }
         String tmp = indexes.get(0) + " W " + indexes.get(2);
-        System.out.println(tmp);
+        //System.out.println(tmp);
         s.add(tmp);
         if(b.getParent() != null){
             try {
                 getStrings(b.getParent(), s);
             }
             catch(NullPointerException e){
+                Collections.reverse(s);
                 return s;
             }
         }
