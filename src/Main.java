@@ -1,5 +1,5 @@
-//[@] = black = false
-//[ ] = white = true
+//[@] = black = false = no peg
+//[ ] = white = true = yes peg
 import java.lang.reflect.Array;
 import java.util.*;
 import javax.swing.*;
@@ -12,6 +12,16 @@ public class Main {
             {6,13,20},
             {30,31,32},
 
+            //inner borders:
+            {7,8,9},
+            {3,8,15},
+            {5,10,17},
+            {9,10,11},
+            {23,24,25},
+            {17,24,29},
+            {15,22,27},
+            {21,22,23},
+
             //8  other borders: (4 - 11)
             {0,3,8},
             {2,5,10},
@@ -22,14 +32,7 @@ public class Main {
             {20,21,22},
             {6,7,8},
 
-            {7,8,9},
-            {3,8,15},
-            {5,10,17},
-            {9,10,11},
-            {23,24,25},
-            {17,24,29},
-            {15,22,27},
-            {21,22,23},
+
 
 
             //4 inner edges: (11 - 14)
@@ -59,14 +62,67 @@ public class Main {
             {10,17,24},
             {22,23,24},
             {8,15,22},
-
-
-
-
-
     };
+    final static int[][] triplets2 = {
+            //outer cross:
+            {13,14,15},
+            {17,18,19},
+            {1,4,9},
+            {23,28,31},
+            //center cross:
+            {9,16,23},
+            {15,16,17},
+
+            //8  other borders: (4 - 11)
+            {0,3,8},
+            {2,5,10},
+            {10,11,12},
+            {24,25,26},
+            {24,29,32},
+            {22,27,30},
+            {20,21,22},
+            {6,7,8},
+
+            {7,8,9},
+            {3,8,15},
+            {5,10,17},
+            {9,10,11},
+            {23,24,25},
+            {17,24,29},
+            {15,22,27},
+            {21,22,23},
+
+
+            //4 inner edges: (11 - 14)
+            {3,4,5},
+            {11,18,25},
+            {27,28,29},
+            {7,14,21},
+
+
+            //final 4:
+            {14,15,16},
+            {16,17,18},
+            {4,9,16},
+            {16,23,28},
+
+
+
+            //inner square border:
+            {8,9,10},
+            {10,17,24},
+            {22,23,24},
+            {8,15,22},
+
+            //4 outside borders: (0 - 3)
+            {0,1,2},
+            {12,19,26},
+            {6,13,20},
+            {30,31,32},
+    };
+
     public static void main(String[] args){
-        HiRiQ test = new HiRiQ((byte) 1);
+        HiRiQ test = new HiRiQ((byte) 3);
         boolean[] c = new boolean[33];
         c = test.load(c);
         boolean[] D = {
@@ -77,26 +133,26 @@ public class Main {
                 true,
                 false,
                 true,
-                false,
-                false,
-                true,
-                true,
-                false,
-                false,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                false,
-                true,
                 true,
                 true,
                 true,
                 true,
                 false,
                 false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                true,
                 true,
                 false,
                 false,
@@ -104,6 +160,7 @@ public class Main {
                 false,
                 false
         };
+
         HiRiQ x = new HiRiQ((byte) 3);
         HiRiQ tt = new HiRiQ((byte) 0);
         tt.store(c);
@@ -198,8 +255,8 @@ public class Main {
                     b.get(k).addChild(b1);
                     HiRiQ q = new HiRiQ((byte)0);
                     q.store(b1);
-                    System.out.println("depth: " + depth + "  child: " + k);
-                    q.print();
+                    //System.out.println("depth: " + depth + "  child: " + k);
+                    //q.print();
 //                    if(unsolvable(b1)){
 //                        for(int l = 0; l < triplets.length; l++) {
 //                            wSub(b1, triplets[l]);
@@ -216,7 +273,12 @@ public class Main {
 
                 }
             }
-
+//            if(b.get(k).getChildren().isEmpty()){
+//
+//                for(int j = 0; j<triplets2.length; j++) {
+//                    wSub(b.get(k).getContent(), triplets2[j]);
+//                }
+//            }
             search(b.get(k).getChildren(), depth);
         }
         HiRiQ ff = new HiRiQ((byte) 0);
@@ -228,14 +290,12 @@ public class Main {
 
     public static void search(ArrayList<Node<boolean[]>> b, int depth) {
         boolean containsSolved = false;
-        if(noChildren(b)){
-            int k;
-            for(k = 0; k<b.size(); k++){
-                for(int j = 0; j<triplets.length; j++) {
-                    wSub(b.get(k).getContent(), triplets[j]);
-                }
-            }
-        }
+//        if(b.isEmpty()){
+//
+//            for(int j = 0; j<triplets.length; j++) {
+//                wSub(b.get(0).getContent(), triplets[j]);
+//            }
+//        }
         int i;
         for (i = 0; i < b.size(); i++) {
             HiRiQ tmp = new HiRiQ((byte) 0);
@@ -252,6 +312,9 @@ public class Main {
             for (int f = 0; f < s.size(); f++) {
                 System.out.println(s.get(f));
             }
+            HiRiQ solved = new HiRiQ((byte) 0);
+            solved.store(b.get(i).getContent());
+            solved.print();
             System.exit(0);
         } else {
             solve(b, depth + 1);
