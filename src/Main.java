@@ -243,59 +243,29 @@ public class Main {
         }
     }
 
-    public static void solve(ArrayList<Node<boolean[]>>b, int depth){
+    public static void solve(ArrayList<Node<boolean[]>>b, int depth) {
         int k;
-        for(k = 0; k<b.size(); k++) {
+        for (k = 0; k < b.size(); k++) {
             for (int j = 0; j < triplets.length; j++) {
                 boolean[] b1 = new boolean[33];
                 System.arraycopy(b.get(k).getContent(), 0, b1, 0, b.get(k).getContent().length);
-                bSub(b1, triplets[j]);
-                //successful bSub:
+                wSub(b1, triplets[j]);
+                //successful wSub:
                 if (!Arrays.equals(b1, b.get(k).getContent())) {
                     b.get(k).addChild(b1);
-                    HiRiQ q = new HiRiQ((byte)0);
+                    HiRiQ q = new HiRiQ((byte) 0);
                     q.store(b1);
-                    //System.out.println("depth: " + depth + "  child: " + k);
-                    //q.print();
-//                    if(unsolvable(b1)){
-//                        for(int l = 0; l < triplets.length; l++) {
-//                            wSub(b1, triplets[l]);
-//                            boolean[] b2 = new boolean[33];
-//                            System.arraycopy(b1, 0, b2, 0, b1.length);
-//                            if(!Arrays.equals(b1,b2)){
-//                                break;
-//                            }
-//                        }
-//                    }
-//                    if(depth == 26 && unsolvable(b1)){
-//                        System.exit(0);
-//                    }
-
+                    System.out.println("depth: " + depth + "  child: " + k);
+                    q.print();
+                    search(b.get(k).getChildren(), depth);
                 }
+                HiRiQ ff = new HiRiQ((byte) 0);
             }
-//            if(b.get(k).getChildren().isEmpty()){
-//
-//                for(int j = 0; j<triplets2.length; j++) {
-//                    wSub(b.get(k).getContent(), triplets2[j]);
-//                }
-//            }
-            search(b.get(k).getChildren(), depth);
         }
-        HiRiQ ff = new HiRiQ((byte) 0);
-        //ff.store(b.get(k).getChildren().get);
-
-
-        //return;
     }
 
     public static void search(ArrayList<Node<boolean[]>> b, int depth) {
         boolean containsSolved = false;
-//        if(b.isEmpty()){
-//
-//            for(int j = 0; j<triplets.length; j++) {
-//                wSub(b.get(0).getContent(), triplets[j]);
-//            }
-//        }
         int i;
         for (i = 0; i < b.size(); i++) {
             HiRiQ tmp = new HiRiQ((byte) 0);
@@ -329,12 +299,6 @@ public class Main {
         } catch (ArrayIndexOutOfBoundsException e){
             chld = true;
         }
-//        for(int i = 0; i<b.size(); i++){
-//            if(b.get(i).getChildren().get(0) == null){
-//                chld = true;
-//                break;
-//            }
-//        }
         return chld;
     }
 
@@ -377,7 +341,7 @@ public class Main {
     //bSub = [@][@][ ] -> [ ][ ][@]
     //wSub = [ ][ ][@] -> [@][@][ ]
 
-    public static boolean[] wSub(boolean[] b, int[] x){
+    public static boolean[] bSub(boolean[] b, int[] x){
         if((b[x[0]] && b[x[2]]) || (!b[x[0]] && !b[x[2]])){
             return b;
         } else if((b[x[0]] || b[x[2]]) && !b[x[1]]) {
@@ -391,7 +355,7 @@ public class Main {
         }
     }
 
-    public static boolean[] bSub(boolean[] b, int[] x){
+    public static boolean[] wSub(boolean[] b, int[] x){
 
         if((b[x[0]] && b[x[2]]) || (!b[x[0]] && !b[x[2]])){
             return b;
