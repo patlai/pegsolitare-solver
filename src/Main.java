@@ -6,14 +6,32 @@ import javax.swing.*;
 
 public class Main {
     final static int[][] triplets = {
+            //4 outside borders:
             {0,1,2},
-            {3,4,5},
+            {12,19,26},
+            {6,13,20},
+            {30,31,32},
 
+            //8  other borders:
+            {2,5,10},
+            {10,11,12},
+            {24,25,26},
+            {24,29,32},
+            {22,27,30},
+            {20,21,22},
             {6,7,8},
+            {0,3,8},
+
+            //4 inner edges:
+            {3,4,5},
+            {11,18,25},
+            {27,28,29},
+            {7,14,21},
+
             {7,8,9},
             {8,9,10},
             {9,10,11},
-            {10,11,12},
+
 
             {13,14,15},
             {14,15,16},
@@ -21,23 +39,16 @@ public class Main {
             {16,17,18},
             {17,18,19},
 
-            {20,21,22},
+
             {21,22,23},
             {22,23,24},
             {23,24,25},
-            {24,25,26},
 
-            {27,28,29},
-            {30,31,32},
 
-            {12,19,26},
-            {11,18,25},
-
-            {2,5,10},
             {5,10,17},
             {10,17,24},
             {17,24,29},
-            {24,29,32},
+
 
             {1,4,9},
             {4,9,16},
@@ -45,14 +56,14 @@ public class Main {
             {16,23,28},
             {23,28,31},
 
-            {0,3,8},
+
             {3,8,15},
             {8,15,22},
             {15,22,27},
-            {22,27,30},
 
-            {7,14,21},
-            {6,13,20}
+
+
+
     };
     public static void main(String[] args){
         boolean[] c = {
@@ -225,6 +236,31 @@ public class Main {
 
         }
         return;
+    }
+
+    public static boolean search(ArrayList<Node<boolean[]>> b, int depth) {
+        boolean containsSolved = false;
+        int i;
+        for (i = 0; i < b.size(); i++) {
+            HiRiQ tmp = new HiRiQ((byte) 0);
+            tmp.store(b.get(i).getContent());
+            if (tmp.IsSolved()) {
+                containsSolved = true;
+                tmp.print();
+                break;
+            }
+        }
+        if (containsSolved) {
+            ArrayList<String> s = new ArrayList<>();
+            s = getStrings(b.get(i), s);
+            for (int f = 0; f < s.size(); f++) {
+                System.out.println(s.get(f));
+            }
+            System.exit(0);
+            return containsSolved;
+        } else {
+            solve(b, depth + 1);
+        }
     }
 
     public static ArrayList<String> getStrings(Node<boolean[]> b, ArrayList<String> s){
