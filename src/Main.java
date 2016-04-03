@@ -261,6 +261,7 @@ public class Main {
         } else {
             solve(b, depth + 1);
         }
+        return false;
     }
 
     public static ArrayList<String> getStrings(Node<boolean[]> b, ArrayList<String> s){
