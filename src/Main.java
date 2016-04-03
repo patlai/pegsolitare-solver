@@ -6,13 +6,14 @@ import javax.swing.*;
 
 public class Main {
     final static int[][] triplets = {
-            //4 outside borders:
+            //4 outside borders: (0 - 3)
             {0,1,2},
             {12,19,26},
             {6,13,20},
             {30,31,32},
 
-            //8  other borders:
+            //8  other borders: (4 - 11)
+            {0,3,8},
             {2,5,10},
             {10,11,12},
             {24,25,26},
@@ -20,63 +21,68 @@ public class Main {
             {22,27,30},
             {20,21,22},
             {6,7,8},
-            {0,3,8},
 
-            //4 inner edges:
+            {7,8,9},
+            {3,8,15},
+            {5,10,17},
+            {9,10,11},
+            {23,24,25},
+            {17,24,29},
+            {15,22,27},
+            {21,22,23},
+
+
+            //4 inner edges: (11 - 14)
             {3,4,5},
             {11,18,25},
             {27,28,29},
             {7,14,21},
 
-            {7,8,9},
-            {8,9,10},
-            {9,10,11},
-
-
-            {13,14,15},
-            {14,15,16},
-            {15,16,17},
-            {16,17,18},
-            {17,18,19},
-
-
-            {21,22,23},
-            {22,23,24},
-            {23,24,25},
-
-
-            {5,10,17},
-            {10,17,24},
-            {17,24,29},
-
-
-            {1,4,9},
-            {4,9,16},
+            //center cross:
             {9,16,23},
+            {15,16,17},
+
+            //final 4:
+            {14,15,16},
+            {16,17,18},
+            {4,9,16},
             {16,23,28},
+
+            //outer cross:
+            {13,14,15},
+            {17,18,19},
+            {1,4,9},
             {23,28,31},
 
-
-            {3,8,15},
+            //inner square border:
+            {8,9,10},
+            {10,17,24},
+            {22,23,24},
             {8,15,22},
-            {15,22,27},
+
 
 
 
 
     };
     public static void main(String[] args){
-        boolean[] c = {
+        HiRiQ test = new HiRiQ((byte) 1);
+        boolean[] c = new boolean[33];
+        c = test.load(c);
+        boolean[] D = {
                 true,
                 true,
                 true,
                 true,
                 true,
+                false,
+                true,
+                false,
+                false,
                 true,
                 true,
-                true,
-                true,
-                true,
+                false,
+                false,
                 true,
                 true,
                 true,
@@ -89,17 +95,14 @@ public class Main {
                 true,
                 true,
                 true,
+                false,
+                false,
                 true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
+                false,
+                false,
+                false,
+                false,
+                false
         };
         HiRiQ x = new HiRiQ((byte) 3);
         HiRiQ tt = new HiRiQ((byte) 0);
@@ -111,19 +114,12 @@ public class Main {
         ArrayList<String> s = new ArrayList<>();
         Node<boolean[]> cc = new Node(c);
         Node<boolean[]> bb = new Node(b);
-        //System.out.println(findLoop(cc,bb));
-       // makeBoolean(cc,s, 0);
+
         Node<boolean[]> q = new Node<boolean[]>(c);
         ArrayList<Node<boolean[]>> qq = new ArrayList<>();
         qq.add(q);
         solve(qq,0);
         HiRiQ one = new HiRiQ((byte) 0);
-        HiRiQ two = new HiRiQ((byte) 0);
-        HiRiQ three = new HiRiQ((byte) 0);
-        HiRiQ four = new HiRiQ((byte) 0);
-        HiRiQ five = new HiRiQ((byte) 0);
-        HiRiQ six = new HiRiQ((byte) 0);
-        Node<HiRiQ> ONE = new Node<>(one);
     }
 
 
@@ -191,62 +187,62 @@ public class Main {
     }
 
     public static void solve(ArrayList<Node<boolean[]>>b, int depth){
-        ArrayList<String> s = new ArrayList<>();
-        boolean containsSolved = false;
-        int i;
-        for(i = 0; i<b.size(); i++){
-            HiRiQ tmp = new HiRiQ((byte) 0);
-            tmp.store(b.get(i).getContent());
-            if(tmp.IsSolved()){
-                containsSolved = true;
-                tmp.print();
-                break;
-            }
-        }
-        if(containsSolved){
-            s = getStrings(b.get(i),s);
-            for(int f = 0; f< s.size(); f++){
-                System.out.println(s.get(f));
-            }
-            System.exit(0);
-        } else {
-            for(int k = 0; k<b.size(); k++) {
-                for (int j = 0; j < 38; j++) {
-                    boolean[] b1 = new boolean[33];
-                    System.arraycopy(b.get(k).getContent(), 0, b1, 0, b.get(k).getContent().length);
-                    bSub(b1, triplets[j]);
-
-                    if (!Arrays.equals(b1, b.get(k).getContent())) {
-                        b.get(k).addChild(b1);
-                        HiRiQ q = new HiRiQ((byte)0);
-                        q.store(b1);
-                        System.out.println("depth: " + depth + "  child: " + k);
-                        q.print();
-                        if(depth == 26 && unsolvable(b1)){
-                            System.exit(0);
-                        }
-//                        if(findLoop(b.get(k).getChildren().get(0),b.get(k))){
-//                            b.get(k).getChildren().remove(0);
-//                            System.out.println("found loop");
+        int k;
+        for(k = 0; k<b.size(); k++) {
+            for (int j = 0; j < triplets.length; j++) {
+                boolean[] b1 = new boolean[33];
+                System.arraycopy(b.get(k).getContent(), 0, b1, 0, b.get(k).getContent().length);
+                bSub(b1, triplets[j]);
+                //successful bSub:
+                if (!Arrays.equals(b1, b.get(k).getContent())) {
+                    b.get(k).addChild(b1);
+                    HiRiQ q = new HiRiQ((byte)0);
+                    q.store(b1);
+                    System.out.println("depth: " + depth + "  child: " + k);
+                    q.print();
+//                    if(unsolvable(b1)){
+//                        for(int l = 0; l < triplets.length; l++) {
+//                            wSub(b1, triplets[l]);
+//                            boolean[] b2 = new boolean[33];
+//                            System.arraycopy(b1, 0, b2, 0, b1.length);
+//                            if(!Arrays.equals(b1,b2)){
+//                                break;
+//                            }
 //                        }
-                    }
+//                    }
+//                    if(depth == 26 && unsolvable(b1)){
+//                        System.exit(0);
+//                    }
+
                 }
-                  solve(b.get(k).getChildren(),depth+1);
             }
 
+            search(b.get(k).getChildren(), depth);
         }
-        return;
+        HiRiQ ff = new HiRiQ((byte) 0);
+        //ff.store(b.get(k).getChildren().get);
+
+
+        //return;
     }
 
-    public static boolean search(ArrayList<Node<boolean[]>> b, int depth) {
+    public static void search(ArrayList<Node<boolean[]>> b, int depth) {
         boolean containsSolved = false;
+        if(noChildren(b)){
+            int k;
+            for(k = 0; k<b.size(); k++){
+                for(int j = 0; j<triplets.length; j++) {
+                    wSub(b.get(k).getContent(), triplets[j]);
+                }
+            }
+        }
         int i;
         for (i = 0; i < b.size(); i++) {
             HiRiQ tmp = new HiRiQ((byte) 0);
             tmp.store(b.get(i).getContent());
             if (tmp.IsSolved()) {
                 containsSolved = true;
-                tmp.print();
+                //tmp.print();
                 break;
             }
         }
@@ -257,11 +253,26 @@ public class Main {
                 System.out.println(s.get(f));
             }
             System.exit(0);
-            return containsSolved;
         } else {
             solve(b, depth + 1);
         }
-        return false;
+    }
+
+
+    public static boolean noChildren(ArrayList<Node<boolean[]>> b){
+        boolean chld;
+        try{
+            chld = false;
+        } catch (ArrayIndexOutOfBoundsException e){
+            chld = true;
+        }
+//        for(int i = 0; i<b.size(); i++){
+//            if(b.get(i).getChildren().get(0) == null){
+//                chld = true;
+//                break;
+//            }
+//        }
+        return chld;
     }
 
     public static ArrayList<String> getStrings(Node<boolean[]> b, ArrayList<String> s){
