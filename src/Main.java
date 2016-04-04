@@ -1,8 +1,6 @@
 //[@] = black = false = no peg
 //[ ] = white = true = yes peg
-import java.lang.reflect.Array;
 import java.util.*;
-import javax.swing.*;
 
 public class Main {
     final static int[][] triplets = {
@@ -121,8 +119,10 @@ public class Main {
             {30,31,32},
     };
 
+    final static int[][] corners =  {{0,1,2}, {6,13,20}, {12,19,26}, {30,31,32}};
+
     public static void main(String[] args){
-        HiRiQ test = new HiRiQ((byte) 3);
+        HiRiQ test = new HiRiQ((byte) 1);
         boolean[] c = new boolean[33];
         c = test.load(c);
         boolean[] D = {
@@ -160,86 +160,78 @@ public class Main {
                 false,
                 false
         };
-
-        HiRiQ x = new HiRiQ((byte) 3);
+        for(int i =0; i<c.length; i++){
+            System.out.print(c[i] + ", ");
+        }
         HiRiQ tt = new HiRiQ((byte) 0);
         tt.store(c);
         System.out.println(tt.config + "  " + tt.weight);
         tt.print();
-        //ArrayList<HiRiQ> a = (makeTree(x,0));
-        boolean[] b = new boolean[33];
-        ArrayList<String> s = new ArrayList<>();
-        Node<boolean[]> cc = new Node(c);
-        Node<boolean[]> bb = new Node(b);
 
         Node<boolean[]> q = new Node<boolean[]>(c);
+       // clean(q);
+        tt.store(c);
+        tt.print();
         ArrayList<Node<boolean[]>> qq = new ArrayList<>();
         qq.add(q);
         solve(qq,0);
-        HiRiQ one = new HiRiQ((byte) 0);
     }
 
-
-    public static ArrayList<Node<boolean[]>> makeBoolean (Node<boolean[]> b , ArrayList<String> s, int index){
-        // ArrayList<boolean[]> qq  = new ArrayList<>();
-        int k = 0;
-        HiRiQ tmp2 = new HiRiQ((byte)0);
-        tmp2.store(b.getContent());
-        if(tmp2.IsSolved()){
+    public static void clean(Node<boolean[]> b){
+        boolean q = b.getContent()[0] &&
+                b.getContent()[1] &&
+                b.getContent()[2] &&
+                b.getContent()[3] &&
+                b.getContent()[4] &&
+                b.getContent()[5] &&
+                b.getContent()[6] &&
+                b.getContent()[7] &&
+                b.getContent()[8] &&
+                b.getContent()[9] &&
+                b.getContent()[10] &&
+                b.getContent()[11] &&
+                b.getContent()[12] &&
+                b.getContent()[13] &&
+                b.getContent()[14] &&
+                b.getContent()[15] &&
+                !b.getContent()[16] &&
+                b.getContent()[17] &&
+                b.getContent()[18] &&
+                b.getContent()[19] &&
+                b.getContent()[20] &&
+                b.getContent()[21] &&
+                b.getContent()[22] &&
+                b.getContent()[23] &&
+                b.getContent()[24] &&
+                b.getContent()[25] &&
+                b.getContent()[26] &&
+                b.getContent()[27] &&
+                b.getContent()[28] &&
+                b.getContent()[29] &&
+                b.getContent()[30] &&
+                b.getContent()[31] &&
+                b.getContent()[32];
+        if(q){
+            return;
         } else {
-            outerloop:
-            for (k = 0; k < 38; k++) {
-                boolean[] b1 = new boolean[33];
-                System.arraycopy(b.getContent(), 0, b1, 0, b.getContent().length);
-                bSub(b1, triplets[k]);
-                //if both boards are the same, do nothing
-                if (Arrays.equals(b1, b.getContent())) {
-                    //---do nothing---
-                } else {
-                    printIntArray(triplets[k]);
-                    System.out.println(countFalse(b1) + " black squares");
-                    b.addChild(b1);
-                    s.add(k + " W " + (k + 2));
-                    HiRiQ tmp = new HiRiQ((byte) 3);
-                    tmp.store(b1);
-                    tmp.print();
-                    if (tmp.IsSolved()) {
-                        System.out.println("Solved");
-                        System.out.println("index: " + index);
-                        getStrings(b.getChildren().get(0), s);
-                        //return makeBoolean(b.getChildren().get(0), s, 0);
-                        //throw(new NullPointerException());
-                        while(true) {
-                            return b.getChildren();
-                        }
-                    } else {
-                        for (int i = 0; i < b.getChildren().size(); i++) {
-                            if(findLoop(b, b.getParent())){
-                                System.out.println("du ma");
-                                return b.getChildren();
-                            } else {
-                                makeBoolean(b.getChildren().get(i), s, i);
-                            }
-                        }
+            while(true){
+                for(int j = 0; j < triplets2.length; j++){
+                    boolean b1[] = new boolean[33];
+                    System.arraycopy(b.getContent(), 0, b1, 0, b1.length);
+                    bSub(b1, triplets2[j]);
+
+                    if(!(Arrays.equals(b.getContent(), b1))){
+                        b.addChild(b1);
+                        HiRiQ tmp = new HiRiQ((byte) 0);
+                        tmp.store(b1);
+                        tmp.print();
+                    }
+
+                    if(q){
+                        break;
                     }
                 }
             }
-
-        }
-        return b.getChildren();
-    }
-
-
-
-    public static boolean findLoop(Node<boolean[]> b, Node<boolean[]> parent){
-        try{
-            if(Arrays.equals(b.getContent(),parent.getContent())) {
-                return true;
-            } else{
-                return findLoop(b, parent.getParent());
-            }
-        }catch (NullPointerException e){
-            return false;
         }
     }
 
@@ -250,7 +242,7 @@ public class Main {
                 boolean[] b1 = new boolean[33];
                 System.arraycopy(b.get(k).getContent(), 0, b1, 0, b.get(k).getContent().length);
                 wSub(b1, triplets[j]);
-                //successful wSub:
+                //successful wSub; the array would have changed:
                 if (!Arrays.equals(b1, b.get(k).getContent())) {
                     b.get(k).addChild(b1);
                     HiRiQ q = new HiRiQ((byte) 0);
@@ -259,13 +251,31 @@ public class Main {
                     q.print();
                     search(b.get(k).getChildren(), depth);
                 }
-                HiRiQ ff = new HiRiQ((byte) 0);
             }
         }
     }
 
     public static void search(ArrayList<Node<boolean[]>> b, int depth) {
         boolean containsSolved = false;
+//        if(unsolvable2(b)) {
+//            System.out.println(b.size());
+//            for (int k = 0; k < b.size(); k++) {
+//                for (int ii = 0; ii < triplets2.length; ii++) {
+//                    boolean[] b2 = new boolean[33];
+//                    System.arraycopy(b.get(k).getContent(), 0, b2, 0, b2.length);
+//                    bSub(b2, triplets2[ii]);
+//                    boolean sub = !(Arrays.equals(b2, b.get(k).getContent()));
+//                    if (sub) {
+//                        b.get(k).addChild(b2);
+//                        HiRiQ tmpp = new HiRiQ((byte) 0);
+//                        tmpp.store(b2);
+//                        tmpp.print();
+//                        solve(b, depth);
+//                    }
+//                }
+//            }
+//        }
+
         int i;
         for (i = 0; i < b.size(); i++) {
             HiRiQ tmp = new HiRiQ((byte) 0);
@@ -291,6 +301,26 @@ public class Main {
         }
     }
 
+    public static boolean checkCorners(boolean[] b){
+        //corners: [0,1,2], [6,13,20], [12,19,26], [30,31,32]
+        //no more than 1 corner should have squares of different colors at a time
+        boolean goodCorners = true;
+
+        int counter = 0;
+        int i;
+        for(i = 0; i <corners.length; i++){
+            if (!((b[corners[i][0]] && b[corners[i][1]]&& b[corners[i][2]])
+                    || !(b[corners[i][0]] && b[corners[i][1]]&& b[corners[i][2]]))){
+                counter++;
+            }
+            if(counter == 2){
+                goodCorners = false;
+                break;
+
+            }
+        }
+        return goodCorners;
+    }
 
     public static boolean noChildren(ArrayList<Node<boolean[]>> b){
         boolean chld;
@@ -334,6 +364,20 @@ public class Main {
                break;
             }
 
+        }
+        return x;
+    }
+
+    public static boolean unsolvable2(ArrayList<Node<boolean[]>> b){
+        boolean x = true;
+        outerloop:
+        for(int j = 0; j < b.size(); j++) {
+            for (int i = 0; i < triplets.length; i++) {
+                if (((b.get(j).getContent()[triplets[i][0]] ^ b.get(j).getContent()[triplets[i][2]]) && b.get(j).getContent()[triplets[i][1]])) {
+                    x = false;
+                    break outerloop;
+                }
+            }
         }
         return x;
     }
@@ -417,6 +461,17 @@ public class Main {
             return q;
         } else {
             return q;
+        }
+    }
+    public static boolean findLoop(Node<boolean[]> b, Node<boolean[]> parent){
+        try{
+            if(Arrays.equals(b.getContent(),parent.getContent())) {
+                return true;
+            } else{
+                return findLoop(b, parent.getParent());
+            }
+        }catch (NullPointerException e){
+            return false;
         }
     }
 }
